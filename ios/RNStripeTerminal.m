@@ -237,11 +237,13 @@ RCT_EXPORT_METHOD(connectReader:(NSString *)serialNumber location:(NSString *)lo
 }
 
 RCT_EXPORT_METHOD(readReusableCard) {
-   [SCPTerminal.shared readReusableCard:intent completion:^(SCPPaymentMethod * _Nullable intent_, NSError * _Nullable error) {
-        intent = intent_;
+SCPReadReusableCardParameters *params = [SCPReadReusableCardParameters new];
+   readCard = [SCPTerminal.shared readReusableCard:params completion:^(SCPPaymentMethod * _Nullable intent_, NSError * _Nullable error) {
+        readCard = nil;
         if (error) {
             [self sendEventWithName:@"readReusableCard" body:@{@"error": [error localizedDescription]}];
         } else {
+            intent = intent_;
             [self sendEventWithName:@"readReusableCard" body:@{@"intent": [self serializePaymentMethod:intent]}];
         }
     }];
