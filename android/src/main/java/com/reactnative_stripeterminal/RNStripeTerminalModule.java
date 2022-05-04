@@ -40,7 +40,7 @@ import com.stripe.stripeterminal.external.models.ReaderEvent;
 import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
-import com.stripe.stripeterminal.model.external.ReadReusableCardParameters;
+import com.stripe.stripeterminal.external.models.ReadReusableCardParameters;
 import com.stripe.stripeterminal.Terminal;
 
 import java.sql.Wrapper;

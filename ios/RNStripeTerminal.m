@@ -55,7 +55,6 @@ static dispatch_once_t onceToken = 0;
              @"abortCreatePaymentCompletion",
              @"abortDiscoverReadersCompletion",
              @"abortInstallUpdateCompletion",
-             @"readReusableCard"
              ];
 }
 
@@ -248,7 +247,8 @@ RCT_EXPORT_METHOD(readReusableCard) {
         } else {
             [self sendEventWithName:@"readReusableCard" body:@{@"method": [self serializePaymentMethod:readResult]}];
         }
-    }]
+    }];
+}
 
 RCT_EXPORT_METHOD(createPayment:(NSDictionary *)options) {
     void (^onIntent) (SCPPaymentIntent * _Nullable intent, NSError * _Nullable error) = ^(SCPPaymentIntent * _Nullable intent, NSError * _Nullable creationError) {
