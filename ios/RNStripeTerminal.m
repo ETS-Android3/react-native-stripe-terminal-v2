@@ -238,7 +238,7 @@ RCT_EXPORT_METHOD(connectReader:(NSString *)serialNumber location:(NSString *)lo
 
 RCT_EXPORT_METHOD(readReusableCard) {
     SCPReadReusableCardParameters *params = [SCPReadReusableCardParameters new];
-    pendingReadPaymentMethod = [[SCPTerminal shared] readReusableCard:params delegate:self completion:^(SCPPaymentMethod *readResult, NSError *error) {
+    pendingReadPaymentMethod = [SCPTerminal.shared readReusableCard:params delegate:self completion:^(SCPPaymentMethod *readResult, NSError *error) {
         pendingReadPaymentMethod = nil;
         if (error) {
             [self sendEventWithName:@"readReusableCard" body:@{
