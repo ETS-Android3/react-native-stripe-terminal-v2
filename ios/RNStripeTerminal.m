@@ -236,10 +236,11 @@ RCT_EXPORT_METHOD(connectReader:(NSString *)serialNumber location:(NSString *)lo
              };
 }
 
-RCT_EXPORT_METHOD(readReusableCard: (NSDictionary *)options) {
-    NSString *customer = [RCTConvert NSString:options[@"customer"]];
-    SCPReadReusableCardParameters *params = [[SCPReadReusableCardParameters alloc] customer:customer];
-    
+RCT_EXPORT_METHOD(readReusableCard:(NSDictionary *)options) {
+    SCPReadReusableCardParameters *params = [[SCPReadReusableCardParameters alloc] init];
+
+    params.customer = options[@"customer"];
+
    [SCPTerminal.shared readReusableCard:params completion:^(SCPPaymentMethod * _Nullable intent_, NSError * _Nullable error) {
        intent = intent_;
         if (error) {
