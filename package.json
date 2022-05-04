@@ -1,29 +1,29 @@
 {
   "_args": [
     [
-      "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
+      "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
       "/Users/derek/react/geotix"
     ]
   ],
-  "_from": "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
-  "_id": "react-native-stripe-terminal@git+https://github.com/mynorth/react-native-stripe-terminal.git#94b4a8f857cc270a38dc34bb16f9a0640f311643",
+  "_from": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+  "_id": "react-native-stripe-terminal@git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
   "_inBundle": false,
   "_integrity": "",
   "_location": "/react-native-stripe-terminal",
   "_phantomChildren": {},
   "_requested": {
     "type": "git",
-    "raw": "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
-    "rawSpec": "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
-    "saveSpec": "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
-    "fetchSpec": "https://github.com/mynorth/react-native-stripe-terminal.git",
+    "raw": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+    "rawSpec": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+    "saveSpec": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+    "fetchSpec": "https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
     "gitCommittish": "stripe-terminal-2"
   },
   "_requiredBy": [
     "/"
   ],
-  "_resolved": "git+https://github.com/mynorth/react-native-stripe-terminal.git#94b4a8f857cc270a38dc34bb16f9a0640f311643",
-  "_spec": "git+https://github.com/mynorth/react-native-stripe-terminal.git#stripe-terminal-2",
+  "_resolved": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+  "_spec": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
   "_where": "/Users/derek/react/geotix",
   "author": {
     "name": "Theo Patt",
@@ -34,7 +34,7 @@
   },
   "deprecated": false,
   "description": "React Native Stripe Terminal",
-  "homepage": "https://github.com/theopolisme/react-native-stripe-terminal#readme",
+  "homepage": "https://github.com/parkerbo/react-native-stripe-terminal-v2",
   "keywords": [
     "react-native"
   ],
@@ -48,8 +48,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/theopolisme/react-native-stripe-terminal.git",
-    "baseUrl": "https://github.com/theopolisme/react-native-stripe-terminal"
+    "url": "git+https://github.com/parkerbo/react-native-stripe-terminal-v2.git",
+    "baseUrl": "https://github.com/parkerbo/react-native-stripe-terminal-v2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
