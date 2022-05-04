@@ -259,13 +259,13 @@ class StripeTerminal {
     );
   }
 
-  readReusableCard() {
+  readReusableCard(options) {
     return this._wrapPromiseReturn(
       "readReusableCard",
       () => {
-        RNStripeTerminal.readReusableCard();
+        RNStripeTerminal.readReusableCard(options);
       },
-      "method"
+      "intent"
     );
   }
 
