@@ -40,7 +40,6 @@ import com.stripe.stripeterminal.external.models.ReaderEvent;
 import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
-import com.stripe.stripeterminal.external.models.ReadReusableCardParameters;
 import com.stripe.stripeterminal.Terminal;
 
 import java.sql.Wrapper;
@@ -453,28 +452,6 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         }
 
         return paymentIntentParamBuilder;
-    }
-
-    @ReactMethod
-    public void readReusableCard() {
-        ReadReusableCardParameters.Builder readReusableCardParameters = new ReadReusableCardParameters.Builder();
-        pendingReadPaymentMethod = Terminal.getInstance().readReusableCard(readReusableCardParameters.build(), this, new PaymentMethodCallback() {
-            @Override
-            public void onSuccess(@Nonnull PaymentMethod paymentMethod) {
-                pendingReadPaymentMethod = null;
-                WritableMap paymentMethodeRespMap = Arguments.createMap();
-                paymentMethodeRespMap.putMap(METHOD, serializePaymentMethod(paymentMethod));
-                sendEventWithName(EVENT_READ_REUSABLE_CARD, paymentMethodeRespMap);
-            }
-
-            @Override
-            public void onFailure(@Nonnull TerminalException e) {
-                pendingReadPaymentMethod = null;
-                WritableMap paymentMethodeRespMap = Arguments.createMap();
-                paymentMethodeRespMap.putString(ERROR,e.getErrorMessage());
-                sendEventWithName(EVENT_READ_REUSABLE_CARD, paymentMethodeRespMap);
-            }
-        });
     }
 
     @ReactMethod
