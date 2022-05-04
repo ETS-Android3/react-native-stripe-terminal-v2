@@ -383,7 +383,7 @@ RCT_EXPORT_METHOD(retrieveSetupIntent:(NSString *)clientSecret) {
 }
 
 RCT_EXPORT_METHOD(collectPaymentMethod) {
-    pendingCreatePaymentIntent = [SCPTerminal.shared collectPaymentMethod:intent completion:^(SCPPaymentIntent * _Nullable collgit ectedIntent, NSError * _Nullable error) {
+    pendingCreatePaymentIntent = [SCPTerminal.shared collectPaymentMethod:intent completion:^(SCPPaymentIntent * _Nullable collectedIntent, NSError * _Nullable error) {
         pendingCreatePaymentIntent = nil;
         if (error) {
             [self sendEventWithName:@"paymentMethodCollection" body:@{
