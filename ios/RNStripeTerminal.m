@@ -248,7 +248,6 @@ RCT_EXPORT_METHOD(connectReader:(NSString *)serialNumber location:(NSString *)lo
              @"stripeId": intent.stripeId,
              @"created": createdDate,
              @"customer": intent.customer,
-             @"usage": intent.usage,
              @"status": intent.status,
              @"metadata": intent.metadata
              };
@@ -402,7 +401,7 @@ RCT_EXPORT_METHOD(collectPaymentMethod) {
 }
 
 RCT_EXPORT_METHOD(collectSetupIntentPaymentMethod) {
-    pendingCreateSetupIntent = [SCPTerminal.shared collectSetupIntentPaymentMethod:intent true completion:^(SCPSetupIntent * _Nullable collectedIntent, NSError * _Nullable error) {
+    pendingCreateSetupIntent = [SCPTerminal.shared collectSetupIntentPaymentMethod:intent customerConsentCollected:true completion:^(SCPSetupIntent * _Nullable collectedIntent, NSError * _Nullable error) {
         pendingCreateSetupIntent = nil;
         if (error) {
             [self sendEventWithName:@"setupIntentPaymentMethodCollection" body:@{
