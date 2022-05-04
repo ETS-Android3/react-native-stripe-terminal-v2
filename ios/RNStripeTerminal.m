@@ -234,7 +234,7 @@ RCT_EXPORT_METHOD(connectReader:(NSString *)serialNumber location:(NSString *)lo
              @"currency": intent.currency,
              @"metadata": intent.metadata
              };
-}fdf
+}
 
 RCT_EXPORT_METHOD(readReusableCard) {
 
