@@ -17,6 +17,7 @@ import com.stripe.stripeterminal.external.callable.ConnectionTokenCallback;
 import com.stripe.stripeterminal.external.callable.ConnectionTokenProvider;
 import com.stripe.stripeterminal.external.callable.DiscoveryListener;
 import com.stripe.stripeterminal.external.callable.PaymentIntentCallback;
+import com.stripe.stripeterminal.external.callable.SetupIntentCallback;
 import com.stripe.stripeterminal.external.callable.ReaderCallback;
 import com.stripe.stripeterminal.external.callable.BluetoothReaderListener;
 import com.stripe.stripeterminal.external.callable.ReaderSoftwareUpdateCallback;
@@ -32,8 +33,12 @@ import com.stripe.stripeterminal.external.models.ConnectionTokenException;
 import com.stripe.stripeterminal.external.models.DiscoveryMethod;
 import com.stripe.stripeterminal.external.models.DiscoveryConfiguration;
 import com.stripe.stripeterminal.external.models.PaymentIntent;
+import com.stripe.stripeterminal.external.models.SetupIntent;
 import com.stripe.stripeterminal.external.models.PaymentIntentParameters;
+import com.stripe.stripeterminal.external.models.SetupIntentParameters;
 import com.stripe.stripeterminal.external.models.PaymentStatus;
+import com.stripe.stripeterminal.external.models.SetupIntentPaymentMethodDetails;
+import com.stripe.stripeterminal.external.models.SetupIntentCardPresentDetails;
 import com.stripe.stripeterminal.external.models.Reader;
 import com.stripe.stripeterminal.external.models.ReaderDisplayMessage;
 import com.stripe.stripeterminal.external.models.ReaderEvent;
@@ -173,6 +178,15 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         }
         paymentIntentMap.putMap(METADATA, metaDataMap);
         return paymentIntentMap;
+    }
+
+    WritableMap serializeSetupIntent(SetupIntent setupIntent) {
+        WritableMap setupIntentMap = Arguments.createMap();
+        setupIntentMap.putString(STRIPE_ID, setupIntent.getId());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ");
+        setupIntentMap.putString(CREATED, simpleDateFormat.format(new Date(paymentIntent.getCreated())));
+        setupIntentMap.putString(CUSTOMER, setupIntent.getCustomer());
+        return setupIntentMap;
     }
 
     @ReactMethod
@@ -508,6 +522,33 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
             sendEventWithName(EVENT_PAYMENT_INTENT_RETRIEVAL, paymentRetrieveRespMap);
         }
     }
+
+    // @ReactMethod
+    // public void retrieveSetupIntent(String clientSecret) {
+    //     if (clientSecret != null) {
+    //         Terminal.getInstance().retrieveSetupIntent(clientSecret, new SetupIntentCallback() {
+    //             @Override
+    //             public void onSuccess(@Nonnull SetupIntent setupIntent) {
+    //                 lastSetupIntent = setupIntent;
+    //                 WritableMap setupRetrieveRespMap = Arguments.createMap();
+    //                 setupRetrieveRespMap.putMap(INTENT, serializePaymentIntent(paymentIntent, "")); //No currency for android
+    //                 sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, paymentRetrieveRespMap);
+    //             }
+
+    //             @Override
+    //             public void onFailure(@Nonnull TerminalException e) {
+    //                 lastPaymentIntent = null;
+    //                 WritableMap paymentRetrieveRespMap = Arguments.createMap();
+    //                 paymentRetrieveRespMap.putString(ERROR, e.getErrorMessage());
+    //                 sendEventWithName(EVENT_PAYMENT_INTENT_RETRIEVAL, paymentRetrieveRespMap);
+    //             }
+    //         });
+    //     } else {
+    //         WritableMap paymentRetrieveRespMap = Arguments.createMap();
+    //         paymentRetrieveRespMap.putString(ERROR, "Client secret cannot be null");
+    //         sendEventWithName(EVENT_PAYMENT_INTENT_RETRIEVAL, paymentRetrieveRespMap);
+    //     }
+    // }
 
     @ReactMethod
     public void cancelPaymentIntent() {
