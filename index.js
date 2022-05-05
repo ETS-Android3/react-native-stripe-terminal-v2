@@ -299,6 +299,15 @@ class StripeTerminal {
     );
   }
 
+  cancelCollectSetupIntentPaymentMethod() {
+    return this._wrapPromiseReturn(
+      "cancelCollectSetupIntentPaymentMethod",
+      () => {
+        RNStripeTerminal.cancelCollectSetupIntentPaymentMethod();
+      }
+    );
+  }
+
   abortCreatePayment() {
     return this._wrapPromiseReturn("abortCreatePaymentCompletion", () => {
       RNStripeTerminal.abortCreatePayment();

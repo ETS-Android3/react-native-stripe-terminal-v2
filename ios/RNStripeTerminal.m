@@ -58,6 +58,7 @@ static dispatch_once_t onceToken = 0;
              @"abortCreatePaymentCompletion",
              @"abortDiscoverReadersCompletion",
              @"abortInstallUpdateCompletion",
+             @"cancelCollectSetupIntentPaymentMethod",
              @"readReusableCard",
              ];
 }
@@ -614,6 +615,21 @@ RCT_EXPORT_METHOD(abortInstallUpdate) {
         return;
     }
     [self sendEventWithName:@"abortInstallUpdateCompletion" body:@{}];
+}
+
+RCT_EXPORT_METHOD(cancelCollectSetupIntentPaymentMethod) {
+    if (pendingCreateSetupIntent) {
+        [pendingCreateSetupIntent cancel:^(NSError * _Nullable error) {
+            if (error) {
+                [self sendEventWithName:@"cancelCollectSetupIntentPaymentMethod" body:@{@"error": [error localizedDescription]}];
+            } else {
+                pendingDiscoverReaders = nil;
+                [self sendEventWithName:@"cancelCollectSetupIntentPaymentMethod" body:@{}];
+            }
+        }];
+        return;
+    }
+    [self sendEventWithName:@"cancelCollectSetupIntentPaymentMethod" body:@{}];
 }
 
 RCT_EXPORT_METHOD(getConnectionStatus) {
