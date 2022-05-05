@@ -4,8 +4,8 @@ React Native wrapper for the [Stripe Terminal](https://stripe.com/docs/terminal)
 Forked from [theopolisme](https://github.com/theopolisme/react-native-stripe-terminal)
 
 ## Added methods
-The only difference from the original library is the addition of the readReusableCard method to capture payment methods for later use.
-Stripe is releasing a Stripe Terminal React Native SDK soon. Please use that once it is available. 
+The only difference from the original library is the addition of the setupIntent methods to capture payment methods for later use.
+Stripe is releasing a [Stripe Terminal React Native SDK](https://stripe.dev/stripe-terminal-react-native/api-reference/) soon. Please use that once it is available. 
 
 ## Getting started
 
