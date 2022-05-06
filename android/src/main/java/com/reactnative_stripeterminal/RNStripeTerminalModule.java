@@ -64,7 +64,9 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
     final static String moduleName = "RNStripeTerminal";
     Cancelable pendingDiscoverReaders = null;
     Cancelable pendingCreatePaymentIntent = null;
+    Cancelable pendingCreateSetupIntent = null;
     PaymentIntent lastPaymentIntent = null;
+    SetupIntent lastSetupIntent = null;
     ReaderEvent lastReaderEvent = ReaderEvent.CARD_REMOVED;
     ConnectionTokenCallback pendingConnectionTokenCallback = null;
     String lastCurrency = null;
@@ -184,7 +186,7 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         WritableMap setupIntentMap = Arguments.createMap();
         setupIntentMap.putString(STRIPE_ID, setupIntent.getId());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ");
-        setupIntentMap.putString(CREATED, simpleDateFormat.format(new Date(paymentIntent.getCreated())));
+        setupIntentMap.putString(CREATED, simpleDateFormat.format(new Date(setupIntent.getCreated())));
         setupIntentMap.putString(CUSTOMER, setupIntent.getCustomer());
         return setupIntentMap;
     }
@@ -523,32 +525,32 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         }
     }
 
-    // @ReactMethod
-    // public void retrieveSetupIntent(String clientSecret) {
-    //     if (clientSecret != null) {
-    //         Terminal.getInstance().retrieveSetupIntent(clientSecret, new SetupIntentCallback() {
-    //             @Override
-    //             public void onSuccess(@Nonnull SetupIntent setupIntent) {
-    //                 lastSetupIntent = setupIntent;
-    //                 WritableMap setupRetrieveRespMap = Arguments.createMap();
-    //                 setupRetrieveRespMap.putMap(INTENT, serializePaymentIntent(paymentIntent, "")); //No currency for android
-    //                 sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, paymentRetrieveRespMap);
-    //             }
+    @ReactMethod
+    public void retrieveSetupIntent(String clientSecret) {
+        if (clientSecret != null) {
+            Terminal.getInstance().retrieveSetupIntent(clientSecret, new SetupIntentCallback() {
+                @Override
+                public void onSuccess(@Nonnull SetupIntent setupIntent) {
+                    lastSetupIntent = setupIntent;
+                    WritableMap setupRetrieveRespMap = Arguments.createMap();
+                    setupRetrieveRespMap.putMap(INTENT, serializeSetupIntent(setupIntent)); 
+                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+                }
 
-    //             @Override
-    //             public void onFailure(@Nonnull TerminalException e) {
-    //                 lastPaymentIntent = null;
-    //                 WritableMap paymentRetrieveRespMap = Arguments.createMap();
-    //                 paymentRetrieveRespMap.putString(ERROR, e.getErrorMessage());
-    //                 sendEventWithName(EVENT_PAYMENT_INTENT_RETRIEVAL, paymentRetrieveRespMap);
-    //             }
-    //         });
-    //     } else {
-    //         WritableMap paymentRetrieveRespMap = Arguments.createMap();
-    //         paymentRetrieveRespMap.putString(ERROR, "Client secret cannot be null");
-    //         sendEventWithName(EVENT_PAYMENT_INTENT_RETRIEVAL, paymentRetrieveRespMap);
-    //     }
-    // }
+                @Override
+                public void onFailure(@Nonnull TerminalException e) {
+                    lastSetupIntent = null;
+                    WritableMap setupRetrieveRespMap = Arguments.createMap();
+                    setupRetrieveRespMap.putString(ERROR, e.getErrorMessage());
+                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+                }
+            });
+        } else {
+            WritableMap setupRetrieveRespMap = Arguments.createMap();
+            setupRetrieveRespMap.putString(ERROR, "Client secret cannot be null");
+            sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+        }
+    }
 
     @ReactMethod
     public void cancelPaymentIntent() {
@@ -596,6 +598,30 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
     }
 
     @ReactMethod
+    public void confirmSetupIntent() {
+        Terminal.getInstance().confirmSetupIntent(lastSetupIntent, new SetupIntentCallback() {
+            @Override
+            public void onSuccess(@Nonnull SetupIntent setupIntent) {
+                lastSetupIntent = setupIntent;
+                WritableMap confirmSetupIntentMap = Arguments.createMap();
+                confirmSetupIntentMap.putMap(INTENT, serializeSetupIntent(setupIntent));
+                sendEventWithName(EVENT_CONFIRM_SETUP_INTENT, confirmSetupIntentMap);
+            }
+
+            @Override
+            public void onFailure(@Nonnull TerminalException e) {
+                WritableMap errorMap = Arguments.createMap();
+                errorMap.putString(ERROR, e.getErrorMessage());
+                errorMap.putString(API_ERROR, e.getApiError().getMessage());
+                errorMap.putInt(CODE, e.getErrorCode().ordinal());
+                errorMap.putString(DECLINE_CODE, e.getApiError().getDeclineCode());
+                errorMap.putMap(INTENT, serializeSetupIntent(lastSetupIntent));
+                sendEventWithName(EVENT_CONFIRM_SETUP_INTENT, errorMap);
+            }
+        });
+    }
+
+    @ReactMethod
     public void collectPaymentMethod() {
         pendingCreatePaymentIntent = Terminal.getInstance().collectPaymentMethod(lastPaymentIntent, new PaymentIntentCallback() {
             @Override
@@ -615,6 +641,30 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
                 errorMap.putInt(CODE, e.getErrorCode().ordinal());
                 errorMap.putMap(INTENT, serializePaymentIntent(lastPaymentIntent, lastCurrency));
                 sendEventWithName(EVENT_PAYMENT_METHOD_COLLECTION, errorMap);
+            }
+        });
+    }
+
+    @ReactMethod
+    public void collectSetupIntentPaymentMethod() {
+        pendingCreateSetupIntent = Terminal.getInstance().collectSetupIntentPaymentMethod(lastSetupIntent, new SetupIntentCallback() {
+            @Override
+            public void onSuccess(@Nonnull SetupIntent setupIntent) {
+                pendingCreateSetupIntent = null;
+                lastSetupIntent = setupIntent;
+                WritableMap collectSetupIntentPaymentMethodMap = Arguments.createMap();
+                collectSetupIntentPaymentMethodMap.putMap(INTENT, serializeSetupIntent(setupIntent));
+                sendEventWithName(EVENT_SETUP_INTENT_PAYMENT_METHOD_COLLECTION, collectSetupIntentPaymentMethodMap);
+            }
+
+            @Override
+            public void onFailure(@Nonnull TerminalException e) {
+                pendingCreateSetupIntent = null;
+                WritableMap errorMap = Arguments.createMap();
+                errorMap.putString(ERROR, e.getErrorMessage());
+                errorMap.putInt(CODE, e.getErrorCode().ordinal());
+                errorMap.putMap(INTENT, serializeSetupIntent(lastSetupIntent));
+                sendEventWithName(EVENT_SETUP_INTENT_PAYMENT_METHOD_COLLECTION, errorMap);
             }
         });
     }
@@ -727,6 +777,28 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
             });
         } else {
             sendEventWithName(EVENT_ABORT_CREATE_PAYMENT_COMPLETION, Arguments.createMap());
+        }
+    }
+
+    @ReactMethod
+    public void cancelCollectSetupIntentPaymentMethod() {
+        if (pendingCreateSetupIntent != null ) {
+            pendingCreateSetupIntent.cancel(new Callback() {
+                @Override
+                public void onSuccess() {
+                    pendingCreateSetupIntent = null;
+                    sendEventWithName(EVENT_CANCEL_COLLECT_SETUP_INTENT_PAYMENT_METHOD, Arguments.createMap());
+                }
+
+                @Override
+                public void onFailure(@Nonnull TerminalException e) {
+                    WritableMap errorMap = Arguments.createMap();
+                    errorMap.putString(ERROR, e.getErrorMessage());
+                    sendEventWithName(EVENT_CANCEL_COLLECT_SETUP_INTENT_PAYMENT_METHOD, errorMap);
+                }
+            });
+        } else {
+            sendEventWithName(EVENT_CANCEL_COLLECT_SETUP_INTENT_PAYMENT_METHOD, Arguments.createMap());
         }
     }
 
