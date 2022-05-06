@@ -852,8 +852,7 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         sendEventWithName(EVENT_PAYMENT_STATUS, status.ordinal());
     }
     
-    @Override
-    public void onUpdateDiscoveredReaders(List<Reader> list) {
+    public void onUpdateDiscoveredReaders(@Nonnull List<? extends Reader> list) {
         discoveredReadersList = list;
         WritableArray readersDiscoveredArr = Arguments.createArray();
         for (Reader reader : list) {
