@@ -851,9 +851,9 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         PaymentStatus status = Terminal.getInstance().getPaymentStatus();
         sendEventWithName(EVENT_PAYMENT_STATUS, status.ordinal());
     }
-
-    @ReactMethod
-    public void onUpdateDiscoveredReaders(@Nonnull List<? extends Reader> list) {
+    
+    @Override
+    public void onUpdateDiscoveredReaders(List<Reader> list) {
         discoveredReadersList = list;
         WritableArray readersDiscoveredArr = Arguments.createArray();
         for (Reader reader : list) {
