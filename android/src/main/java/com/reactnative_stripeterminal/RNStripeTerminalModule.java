@@ -525,33 +525,6 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
     }
 
     @ReactMethod
-    public void retrieveSetupIntent(String clientSecret) {
-        if (clientSecret != null) {
-            Terminal.getInstance().retrieveSetupIntent(clientSecret, new SetupIntentCallback() {
-                @Override
-                public void onSuccess(@Nonnull SetupIntent setupIntent) {
-                    lastSetupIntent = setupIntent;
-                    WritableMap setupRetrieveRespMap = Arguments.createMap();
-                    setupRetrieveRespMap.putMap(INTENT, serializeSetupIntent(setupIntent)); 
-                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
-                }
-
-                @Override
-                public void onFailure(@Nonnull TerminalException e) {
-                    lastSetupIntent = null;
-                    WritableMap setupRetrieveRespMap = Arguments.createMap();
-                    setupRetrieveRespMap.putString(ERROR, e.getErrorMessage());
-                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
-                }
-            });
-        } else {
-            WritableMap setupRetrieveRespMap = Arguments.createMap();
-            setupRetrieveRespMap.putString(ERROR, "Client secret cannot be null");
-            sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
-        }
-    }
-
-    @ReactMethod
     public void cancelPaymentIntent() {
         Terminal.getInstance().cancelPaymentIntent(lastPaymentIntent, new PaymentIntentCallback() {
             @Override
@@ -594,6 +567,33 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
                 sendEventWithName(EVENT_PROCESS_PAYMENT, errorMap);
             }
         });
+    }
+
+    @ReactMethod
+    public void retrieveSetupIntent(String clientSecret) {
+        if (clientSecret != null) {
+            Terminal.getInstance().retrieveSetupIntent(clientSecret, new SetupIntentCallback() {
+                @Override
+                public void onSuccess(@Nonnull SetupIntent setupIntent) {
+                    lastSetupIntent = setupIntent;
+                    WritableMap setupRetrieveRespMap = Arguments.createMap();
+                    setupRetrieveRespMap.putMap(INTENT, serializeSetupIntent(setupIntent)); 
+                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+                }
+
+                @Override
+                public void onFailure(@Nonnull TerminalException e) {
+                    lastSetupIntent = null;
+                    WritableMap setupRetrieveRespMap = Arguments.createMap();
+                    setupRetrieveRespMap.putString(ERROR, e.getErrorMessage());
+                    sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+                }
+            });
+        } else {
+            WritableMap setupRetrieveRespMap = Arguments.createMap();
+            setupRetrieveRespMap.putString(ERROR, "Client secret cannot be null");
+            sendEventWithName(EVENT_SETUP_INTENT_RETRIEVAL, setupRetrieveRespMap);
+        }
     }
 
     @ReactMethod
