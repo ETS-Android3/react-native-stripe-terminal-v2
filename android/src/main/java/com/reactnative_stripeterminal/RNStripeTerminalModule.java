@@ -59,7 +59,7 @@ import javax.annotation.Nullable;
 
 import static com.reactnative_stripeterminal.Constants.*;
 
-public abstract class RNStripeTerminalModule extends ReactContextBaseJavaModule implements TerminalListener, ConnectionTokenProvider, BluetoothReaderListener, DiscoveryListener {
+public class RNStripeTerminalModule extends ReactContextBaseJavaModule implements TerminalListener, ConnectionTokenProvider, BluetoothReaderListener, DiscoveryListener {
     final static String TAG = RNStripeTerminalModule.class.getSimpleName();
     final static String moduleName = "RNStripeTerminal";
     Cancelable pendingDiscoverReaders = null;
@@ -852,7 +852,7 @@ public abstract class RNStripeTerminalModule extends ReactContextBaseJavaModule 
         sendEventWithName(EVENT_PAYMENT_STATUS, status.ordinal());
     }
 
-    @Override
+    @ReactMethod
     public void onUpdateDiscoveredReaders(@Nonnull List<? extends Reader> list) {
         discoveredReadersList = list;
         WritableArray readersDiscoveredArr = Arguments.createArray();
