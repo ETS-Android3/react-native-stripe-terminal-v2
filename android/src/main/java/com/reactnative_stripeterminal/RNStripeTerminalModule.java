@@ -187,7 +187,6 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         setupIntentMap.putString(STRIPE_ID, setupIntent.getId());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ");
         setupIntentMap.putString(CREATED, simpleDateFormat.format(new Date(setupIntent.getCreated())));
-        setupIntentMap.putString(CUSTOMER, setupIntent.getCustomer());
         return setupIntentMap;
     }
 
@@ -647,7 +646,7 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
 
     @ReactMethod
     public void collectSetupIntentPaymentMethod() {
-        pendingCreateSetupIntent = Terminal.getInstance().collectSetupIntentPaymentMethod(lastSetupIntent, new SetupIntentCallback() {
+        pendingCreateSetupIntent = Terminal.getInstance().collectSetupIntentPaymentMethod(lastSetupIntent, true, new SetupIntentCallback() {
             @Override
             public void onSuccess(@Nonnull SetupIntent setupIntent) {
                 pendingCreateSetupIntent = null;
