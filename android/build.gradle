@@ -1,6 +1,7 @@
 buildscript {
   repositories {
     google()
+    mavenCentral()
     maven {
       url 'https://maven.google.com/'
       name 'Google'
@@ -9,8 +10,9 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:4.2.0'
+    classpath 'com.android.tools.build:gradle:3.6.0'
     classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.0'
+    classpath 'com.dipien:bye-bye-jetifier:1.2.1' 
   }
 }
 
@@ -21,12 +23,12 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet("compileSdkVersion",31)
+  compileSdkVersion safeExtGet("compileSdkVersion",28)
   //buildToolsVersion safeExtGet("buildToolsVersion","28.0.3")
 
   defaultConfig {
     minSdkVersion 21
-    targetSdkVersion safeExtGet("targetSdkVersion",30)
+    targetSdkVersion safeExtGet("targetSdkVersion",28)
     versionCode 1
     versionName "1.0"
   }
