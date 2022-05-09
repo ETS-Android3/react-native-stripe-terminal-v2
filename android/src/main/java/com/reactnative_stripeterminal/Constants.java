@@ -51,6 +51,7 @@ public class Constants {
     public static final String EVENT_DID_FINISH_INSTALLING_UPDATE = "didFinishInstallingUpdate";
     public static final String EVENT_ABORT_INSTALL_COMPLETION = "abortInstallUpdateCompletion";
     public static final String EVENT_ABORT_CREATE_PAYMENT_COMPLETION = "abortCreatePaymentCompletion";
+    public static final String EVENT_BATTERY_STATUS = "batteryStatus";
     public static final String EVENT_READ_REUSABLE_CARD = "readReusableCard";
 
     //JSON keys

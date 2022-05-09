@@ -45,6 +45,7 @@ import com.stripe.stripeterminal.external.models.ReaderEvent;
 import com.stripe.stripeterminal.external.models.ReaderInputOptions;
 import com.stripe.stripeterminal.external.models.ReaderSoftwareUpdate;
 import com.stripe.stripeterminal.external.models.TerminalException;
+import com.stripe.stripeterminal.external.models.BatteryStatus;
 import com.stripe.stripeterminal.Terminal;
 
 import java.sql.Wrapper;
@@ -863,6 +864,11 @@ public class RNStripeTerminalModule extends ReactContextBaseJavaModule implement
         }
 
         sendEventWithName(EVENT_READERS_DISCOVERED, readersDiscoveredArr);
+    }
+    
+    @Override
+    public void onBatteryLevelUpdate(float batteryLevel, BatteryStatus batteryStatus, boolean isCharging) {
+        sendEventWithName(EVENT_BATTERY_STATUS, Arguments.createMap());
     }
 
     @Override
